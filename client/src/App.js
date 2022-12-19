@@ -57,8 +57,8 @@ function App() {
         suggestions={records.map((item) => item?.label_id)}
         placeholder="Enter label id"
         onSubmit={onSubmit}
-        inputFilter={inputFilter}
         onChange={onChange}
+        inputFilter={inputFilter}
         inputLengthMin={INPUT_LENGTH_MIN}
       />
 
