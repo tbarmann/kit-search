@@ -1,0 +1,22 @@
+{
+  "name": "kit-search",
+  "version": "1.0.0",
+  "description": "Get tracking info for wastewater sample kits",
+  "main": "server/server.js",
+  "scripts": {
+    "server": "node server/server.js",
+    "client": "cd client && npm start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Timothy Barmann",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "2.8.5",
+    "express": "4.18.2",
+    "sqlite3": "5.1.4"
+  },
+   "engines": {
+    "npm": "^8.0.0",
+    "node": "^16.0.0"
+  }
+}
