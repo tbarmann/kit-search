@@ -6,7 +6,6 @@ function Autocomplete({
   placeholder,
   onSubmit,
   inputFilter,
-  loading,
   onChange,
   inputLengthMin = 2
   }) {
@@ -60,7 +59,6 @@ function Autocomplete({
       <input type="submit" value="Search" className="submit-button"/>
       <input type="reset" value="Clear" onClick={clearForm} className="clear-button"/>
 
-      {/* {!!loading && <div className="loader"></div>} */}
       {showSuggestions && !!suggestions.length && <ul className="suggestions">
         {suggestions.map((suggestion) => (
           <li
