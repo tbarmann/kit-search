@@ -77,4 +77,14 @@ function Autocomplete({
   )
 }
 
+Autocomplete.propTypes = {
+  suggestions: PropTypes.arrayOf(PropTypes.string),
+  getSuggestions: PropTypes.func,
+  placeholder: PropTypes.string,
+  onSubmit: PropTypes.func.isRequired,
+  inputFilter: PropTypes.func,
+  onChange: PropTypes.func,
+  inputLengthMin: PropTypes.number
+};
+
 export default Autocomplete
