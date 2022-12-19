@@ -51,7 +51,7 @@ function Autocomplete({
   };
 
   return (
-    <form className="search-form" onSubmit={handleOnSubmit}>
+    <form className="search-form" onSubmit={handleOnSubmit} autocomplete="off">
       <input
         name="searchField"
         type="text"
