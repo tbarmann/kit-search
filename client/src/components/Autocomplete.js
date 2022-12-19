@@ -1,13 +1,14 @@
 import React, {useState} from 'react'
+import PropTypes from 'prop-types';
 
 function Autocomplete({
-  suggestions,
+  suggestions = [],
   getSuggestions,
-  placeholder,
+  placeholder = "Enter search text",
   onSubmit,
   inputFilter,
   onChange,
-  inputLengthMin = 2
+  inputLengthMin = 2,
   }) {
 
     const [textInput, setTextInput] = useState(''); // search text
@@ -18,15 +19,15 @@ function Autocomplete({
       // if we were passed an inputFilter function, use it
       const filteredInput = inputFilter ? inputFilter(input) : input;
       setTextInput(filteredInput);
-      // get suggestions only if user enters a minimum number of characters
+      // refetch suggestions only if user enters a minimum number of characters
       if (filteredInput.length >= inputLengthMin) {
-        getSuggestions(filteredInput);
+        typeof getSuggestions === 'function' && getSuggestions(filteredInput);
         setShowSuggestions(true);
       }
       else {
         setShowSuggestions(false);
       }
-      onChange(); // parent component can do something when input changes
+      typeof onChange === 'function' && onChange(); // parent component can do something when input changes
     };
 
   const handleOnSubmit = (event) => {
@@ -46,7 +47,7 @@ function Autocomplete({
   const clearForm = () => {
     setTextInput('');
     setShowSuggestions(false);
-    onChange();
+    typeof onChange === 'function' && onChange();
   };
 
   return (
