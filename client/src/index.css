@@ -32,6 +32,10 @@ code {
   font-size: 15px;
 }
 
+.search-form .submit-button, .clear-button {
+  margin-left: 10px;
+}
+
 .field {
   display: flex;
   flex-direction: row;
@@ -73,7 +77,7 @@ code {
   cursor: pointer;
 }
 
-.target, no-matches {
+.target, .no-matches {
   font-family: monospace;
   margin-top: 20px;
 }

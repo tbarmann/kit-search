@@ -3,31 +3,22 @@ import Autocomplete from './components/Autocomplete';
 import Error from './components/Error';
 import { isEmpty } from './utils/utils';
 const API_URL = 'http://localhost:3001/shipping-code/';
+const INPUT_LENGTH_MIN = 2;
 
 function App() {
 
-  const [textInput, setTextInput] = useState(''); // search text
-  const [matches, setMatches] = useState([]); // array of records that match
-
-  const [target, setTarget] = useState({}); // the record that matches exactly
+  const [records, setRecords] = useState([]); // array of records that match
+  const [found, setFound] = useState({}); // the record that matches exactly
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showSearchResult, setShowSearchResult] = useState(false);
 
-  const handleOnchange = (event) => {
+  const inputFilter = (dirtyText) => {
     // allow only numbers and hyphens
-    const cleanedInput = event.target.value.replace(/[^0-9-]/g, '');
-    setTextInput(cleanedInput);
-    // fetch matches only if user enters 2 or more characters
-    if (cleanedInput.length > 1) {
-      fetchMatches(cleanedInput);
-    } else {
-      // user has deleted all input, clear matches and target
-      setMatches([]);
-      setTarget({});
-    }
-  };
+    return dirtyText.replace(/[^0-9-]/g, '');
+  }
 
-  const fetchMatches = (labelId) => {
+  const fetchRecords = (labelId) => {
     setLoading(true);
     const options = { mode: 'cors'};
     fetch(API_URL + labelId, options)
@@ -35,29 +26,23 @@ function App() {
       .then((data) => {
         setLoading(false);
         clearError();
-        setMatches(data.data);
-        // unless we have 1 match, clear the target
-        if (data.data.length !== 1) {
-          setTarget({});
-        }
+        setRecords(data.data);
       }).catch((error) => {
         setLoading(false);
         setError(error);
       })
   };
 
-  const handleOnClick = (event) => {
-    const labelId = event.target.innerText;
-    setTextInput(labelId);
-    const target = matches.find((item) => item.label_id === labelId);
-    setTarget(target);
-    setMatches([]);
-  };
-
-  const onSubmit = (event) => {
-    // keep page from reloading if user hits enter
-    event.preventDefault();
+  const onSubmit = (searchText) => {
+    const record = records.find((item) => item.label_id === searchText);
+    setFound(record ? record : {});
+    setShowSearchResult(true);
   }
+
+  const onChange = () => {
+    setFound({});
+    setShowSearchResult(false);
+  };
 
   const clearError = () => {
     setError(null);
@@ -68,23 +53,27 @@ function App() {
       {error && <Error message={error.message} clearError={clearError}/>}
       <h3>Track your shipment</h3>
       <Autocomplete
-        suggestions={matches.map((item) => item?.label_id)}
+        getSuggestions={fetchRecords}
+        suggestions={records.map((item) => item?.label_id)}
         placeholder="Enter label id"
-        textInput={textInput}
-        handleOnChange={handleOnchange}
-        handleOnClick={handleOnClick}
         onSubmit={onSubmit}
         loading={loading}
+        inputFilter={inputFilter}
+        onChange={onChange}
+        inputLengthMin={INPUT_LENGTH_MIN}
       />
-      {matches.length === 0 && textInput.length < 2 && <div className="no-matches">
-          <div>Enter at least two label digits to see matches</div>
-        </div>
-      }
-      {!isEmpty(target) && <div className="target">
-          <div>Id: {target.id}</div>
-          <div>Label Id: {target.label_id}</div>
-          <div>Shipping code: {target.shipping_tracking_code}</div>
-        </div>
+
+      {showSearchResult &&
+        <div className="search-result">
+          {isEmpty(found)
+            ? (<div>No record found</div>)
+            : (<>
+                <div>Id: {found.id}</div>
+                <div>Label Id: {found.label_id}</div>
+                <div>Shipping code: {found.shipping_tracking_code}</div>
+            </>)
+          }
+       </div>
       }
     </div>
   );
