@@ -15,9 +15,10 @@ function Autocomplete({
 
     const handleOnChange = (event) => {
       const input = event.target.value;
+      // if we were passed an inputFilter function, use it
       const filteredInput = inputFilter ? inputFilter(input) : input;
       setTextInput(filteredInput);
-      // get suggestions only if user enters 2 or more characters
+      // get suggestions only if user enters a minimum number of characters
       if (filteredInput.length >= inputLengthMin) {
         getSuggestions(filteredInput);
         setShowSuggestions(true);
@@ -25,17 +26,18 @@ function Autocomplete({
       else {
         setShowSuggestions(false);
       }
-      onChange();
+      onChange(); // parent component can do something when input changes
     };
 
   const handleOnSubmit = (event) => {
     // keep page from reloading if user hits enter
     event.preventDefault();
     setShowSuggestions(false);
-    onSubmit(textInput);
+    onSubmit(textInput);  // parent handles submit
   };
 
   const onClick = (event) => {
+    // load input field with clicked suggestion
     const text = event.target.innerText;
     setTextInput(text);
     setShowSuggestions(false);
