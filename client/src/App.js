@@ -80,10 +80,6 @@ function App() {
           <div>Enter at least two label digits to see matches</div>
         </div>
       }
-      {matches.length !== 0 && textInput.length > 2 && <div className="no-matches">
-          <div>No matches</div>
-        </div>
-      }
       {!isEmpty(target) && <div className="target">
           <div>Id: {target.id}</div>
           <div>Label Id: {target.label_id}</div>
